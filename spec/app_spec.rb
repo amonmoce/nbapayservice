@@ -70,9 +70,9 @@ describe 'TeamPay Stories' do
 
       header = { 'CONTENT_TYPE' => 'application/json' }
       body =  {
-                teamname: 'PHO',
-                playername1: 'Archie Goodwin',
-                playername2: 'Marcus Morris'
+                teamname: ["PHO"],
+                playername1: ["Archie Goodwin"],
+                playername2: ["Marcus Morris"]
               }
       post '/api/v1/comparisons', body.to_json, header
 
@@ -83,7 +83,7 @@ describe 'TeamPay Stories' do
       # Check if request parameters are stored in ActiveRecord data store
       income_id = next_location.scan(/comparisons\/(\d+)/).flatten[0].to_i
       save_income = Income.find(income_id)
-      save_income[:teamname].must_equal body[:teamname]
+      JSON.parse(save_income[:teamname]).must_equal body[:teamname]
 
 
       # Check if redirect works
@@ -94,9 +94,9 @@ describe 'TeamPay Stories' do
     it 'should return 404 for unknown users' do
       header = { 'CONTENT_TYPE' => 'application/json' }
       body = {
-              teamname: random_str(15),
-              playername1: random_str(30),
-              playername2: random_str(30)
+              teamname: [random_str(15)],
+              playername1: [random_str(30)],
+              playername2: [random_str(30)]
               }
       post '/api/v1/comparisons', body.to_json, header
 
@@ -144,9 +144,9 @@ describe 'TeamPay Stories' do
       header = { 'CONTENT_TYPE' => 'application/json' }
       body = {
         description: "Team players' salary",
-        teamname: 'PHO',
-        playername1: 'Archie Goodwin',
-        playername2: 'Marcus Morris'
+        teamname: ['PHO'],
+        playername1: ['Archie Goodwin'],
+        playername2: ['Marcus Morris']
                   }
 
       # Check redirect URL from post request
@@ -158,7 +158,7 @@ describe 'TeamPay Stories' do
       # Check if request parameters are stored in ActiveRecord data store
       income_id = next_location.scan(/playertotal\/(\d+)/).flatten[0].to_i
       save_income = Income.find(income_id)
-      save_income[:teamname].must_equal body[:teamname]
+      JSON.parse(save_income[:teamname]).must_equal body[:teamname]
 
 
       # Check if redirect works
@@ -170,9 +170,9 @@ describe 'TeamPay Stories' do
       header = { 'CONTENT_TYPE' => 'application/json' }
       body = {
         description: 'Checking for invalid team',
-        playername1: random_str(15),
-        playername2: random_str(15),
-        teamname: random_str(30)
+        playername1: [random_str(15)],
+        playername2: [random_str(15)],
+        teamname: [random_str(30)]
       }
 
       post '/api/v1/playertotal', body.to_json, header
