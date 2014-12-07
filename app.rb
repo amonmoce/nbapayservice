@@ -175,9 +175,9 @@ class TeamPayService < Sinatra::Base
       halt 400
     end
     incomes = Income.new
-    incomes.teamname = req['teamname'].to_json
-    incomes.playername1 = req['playername1'].to_json
-    incomes.playername2 = req['playername2'].to_json
+    incomes.teamname = req['teamname']
+    incomes.playername1 = req['playername1']
+    incomes.playername2 = req['playername2']
 
     if incomes.save
       redirect "/api/v1/comparisons/#{incomes.id}"
@@ -189,21 +189,22 @@ class TeamPayService < Sinatra::Base
     logger.info "GET /api/v1/comparisons/#{params[:id]}"
     begin
       @income = Income.find(params[:id])
-      teamname = JSON.parse(@income.teamname)
-      playername1 = JSON.parse(@income.playername1)
-      playername2 = JSON.parse(@income.playername2)
-      players = [playername1[0], playername2[0]]
+      teamname = @income.teamname
+      playername1 = @income.playername1
+      playername2 = @income.playername2
+      players = [playername1, playername2]
     rescue
       halt 400
     end
 
-    result = two_players_salary_data(teamname[0], players).to_json
+    result = two_players_salary_data(teamname, players).to_json
     logger.info "result: #{result}\n"
     if result.nil? || result.empty?
       halt 404
     else
       result
     end
+    result
   end
 
   delete '/api/v1/playertotal/:id' do
@@ -223,8 +224,8 @@ class TeamPayService < Sinatra::Base
       halt 400
     end
     incomes = Income.new
-    incomes.teamname = req['teamname'].to_json
-    incomes.playername1 = req['playername1'].to_json
+    incomes.teamname = req['teamname']
+    incomes.playername1 = req['playername1']
 
     if incomes.save
       redirect "/api/v1/playertotal/#{incomes.id}"
@@ -236,13 +237,13 @@ class TeamPayService < Sinatra::Base
     logger.info "GET /api/v1/playertotal/#{params[:id]}"
     begin
       @total = Income.find(params[:id])
-      teamname = JSON.parse(@total.teamname)
-      playername1 = JSON.parse(@total.playername1)
+      teamname = @total.teamname
+      playername1 = [@total.playername1]
     rescue
       halt 400
     end
 
-    result = player_total_salary(teamname[0], playername1).to_json
+    result = player_total_salary(teamname, playername1).to_json
     logger.info "result: #{result}\n"
     result
   end
