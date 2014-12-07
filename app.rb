@@ -281,7 +281,7 @@ class TeamPayService < Sinatra::Base
   end
 
   get '/' do
-    'CService api/v2 is up and working at /api/v2/'
+    'NBA PAY Service api/v1 is up and working at /api/v1/'
   end
 
   not_found do
