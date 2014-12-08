@@ -6,6 +6,7 @@ gem 'nbasalaryscrape'
 gem 'nokogiri'
 gem 'json'
 
+gem 'thin'
 gem 'activerecord'
 gem 'sinatra-activerecord'
 
